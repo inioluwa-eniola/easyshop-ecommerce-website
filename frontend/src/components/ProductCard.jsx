@@ -23,8 +23,7 @@ const ProductCard = ({ product }) => {
       <div className="product-card-content">
         <h3 className="product-card-title">{product.title}</h3>
         <p className="product-card-description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec dapibus
-          placerat odio, nec sollicitudin justo eleifend et.
+          {product.description?.slice(0, 100)} <Link className="link" to={`/product/${product.id}`}>{" "}<span className="product-card-show-more-text" >show more...</span></Link>
         </p>
         <div className="product-card-mid-section">
           <p className="product-card-price">${product.price}</p>

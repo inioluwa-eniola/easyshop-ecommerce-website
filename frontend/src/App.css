@@ -139,6 +139,11 @@ body {
   font-weight: 500;
 }
 
+.link {
+  text-decoration: none;
+  color: var(--primary-text-color);
+}
+
 .page {
   flex: 1;
   padding: 2rem 0;
@@ -233,6 +238,15 @@ body {
   padding: 0.5rem 0.75rem;
   color: var(--primary-text-color);
 }
+
+
+.product-card-show-more-text {
+  /* margin-left: 0.5rem; */
+  text-decoration: none;
+  color: #2B4FCD;
+  transition: color 0.2s;
+}   
+
 
 .loading-animation-container {
   margin: auto;
@@ -410,6 +424,26 @@ body {
   flex-direction: column;
   align-items: flex-end;
   gap: 0.5rem;
+}
+
+.checkout-empty {
+  box-shadow: 0px 7px 29px 0px rgba(100, 100, 111, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+}
+
+.checkout-empty-icon {
+  font-size: 5rem;
+}
+
+.checkout-empty-text {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
 .quantity-controls {

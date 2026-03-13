@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"
 import { useCart } from "../context/CartContext";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
+import { Mosaic } from "react-loading-indicators";
+import { BsCartXFill } from "react-icons/bs";
+
 
 import { useRandom } from "../hooks/useRandom";
 
 const Checkout = () => {
+  const [cartItems, setCartItems] = useState(null)
+  const [total, setTotal] = useState(0)
+  // const [loading, setLoading] = useState(false)
   const [orderPlaced, setOrderPlaced] = useState(false);
+  
   const { randomIndex } = useRandom()
 
   const {
+    cartItems: rawCartItems,
     getCartItemsWithProducts,
     updateQuantity,
     removeFromCart,
@@ -17,8 +26,26 @@ const Checkout = () => {
     clearCart,
   } = useCart();
 
-  const cartItems = getCartItemsWithProducts();
-  const total = getCartTotal();
+  useEffect(() => {
+    async function fetchData() {
+      // setLoading(true)
+      const items = await getCartItemsWithProducts()
+      const cartTotal = await getCartTotal()
+
+      setCartItems(items)
+      setTotal(cartTotal)
+      // setLoading(false)
+    }
+    fetchData()
+  }, [rawCartItems])
+
+
+  useEffect(() => {
+    console.log("cartItems", cartItems)
+  }, [cartItems])
+
+  // const cartItems = getCartItemsWithProducts();
+  // const total = getCartTotal();
 
   function placeOrder() {
     alert("successful order");
@@ -26,7 +53,29 @@ const Checkout = () => {
     setOrderPlaced(true);
   }
 
-  return (
+  // if(loading) {
+  //   return (
+  //     <div className="loading-animation-container">
+  //       <Mosaic color="#195cce" size="large" text="" textColor="" />
+  //     </div>
+  //   );
+  // }
+
+  if (cartItems && cartItems.length === 0) {
+    return (
+      <div className="page">
+        <div className="container">
+          <p className="checkout-empty-text">Cart is empty</p>
+          <Link to="/">
+            <div className="checkout-empty">
+              <BsCartXFill className="link checkout-empty-icon"/>
+            </div>
+          </Link>
+        </div>
+      </div>
+    )}
+
+  return cartItems && (
     <div className="page">
       <div className="container">
         <h1 className="page-title">Checkout</h1>

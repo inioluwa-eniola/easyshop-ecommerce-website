@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Mosaic } from "react-loading-indicators";
-import { getProductById } from "../data/fetchData";
+// import { getProductById } from "../data/fetchData";
+import { getProductById } from "../services/productService"
 import { useRandom } from "../hooks/useRandom";
 import { useCart } from "../context/CartContext";
 
@@ -14,8 +15,8 @@ const ProductDetail = () => {
   const { addToCart, cartItems } = useCart();
 
   useEffect(() => {
-    function getProduct() {
-      const foundProduct = getProductById(id);
+    async function getProduct() {
+      const foundProduct = await getProductById(id);
       if (!foundProduct) {
         navigate("/");
       } else {
