@@ -6,18 +6,17 @@ const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
-const getAll = async () => {
-  const request = await axios.get("/api/users")
-  return request.data
-}
-
-const checkout = async ({ username, password }) => {
-  const config = {
-    headers: { Authorization: token }
+const checkout = async () => {
+  try {
+    const config = {
+      headers: { Authorization: token }
+    }
+    const request = await axios.post("/auth/checkout",{}, config)
+    return request.data
+  } catch (error) {
+    console.log(error)
+    return ({ success: false, message: "user must login" })
   }
-  const request = await axios.post("/auth/checkout", { username, password }, config)
-  return request.data
 }
 
-
-export { setToken, getAll, checkout }
+export default { setToken, checkout }

@@ -3,16 +3,13 @@ import { Link } from "react-router-dom"
 import { useCart } from "../context/CartContext";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
-import { Mosaic } from "react-loading-indicators";
 import { BsCartXFill } from "react-icons/bs";
-
 
 import { useRandom } from "../hooks/useRandom";
 
 const Checkout = () => {
   const [cartItems, setCartItems] = useState(null)
   const [total, setTotal] = useState(0)
-  // const [loading, setLoading] = useState(false)
   const [orderPlaced, setOrderPlaced] = useState(false);
   
   const { randomIndex } = useRandom()
@@ -23,43 +20,19 @@ const Checkout = () => {
     updateQuantity,
     removeFromCart,
     getCartTotal,
-    clearCart,
+    placeOrder
   } = useCart();
 
   useEffect(() => {
     async function fetchData() {
-      // setLoading(true)
       const items = await getCartItemsWithProducts()
       const cartTotal = await getCartTotal()
 
       setCartItems(items)
       setTotal(cartTotal)
-      // setLoading(false)
     }
     fetchData()
   }, [rawCartItems])
-
-
-  useEffect(() => {
-    console.log("cartItems", cartItems)
-  }, [cartItems])
-
-  // const cartItems = getCartItemsWithProducts();
-  // const total = getCartTotal();
-
-  function placeOrder() {
-    alert("successful order");
-    clearCart();
-    setOrderPlaced(true);
-  }
-
-  // if(loading) {
-  //   return (
-  //     <div className="loading-animation-container">
-  //       <Mosaic color="#195cce" size="large" text="" textColor="" />
-  //     </div>
-  //   );
-  // }
 
   if (cartItems && cartItems.length === 0) {
     return (
@@ -139,7 +112,10 @@ const Checkout = () => {
             </div>
             {!orderPlaced && <button
               className="btn btn-cta btn-large btn-block"
-              onClick={placeOrder}
+              onClick={async () => {
+                await placeOrder()
+                // setOrderPlaced(true)
+              }}
             >
               Place Order
             </button>}

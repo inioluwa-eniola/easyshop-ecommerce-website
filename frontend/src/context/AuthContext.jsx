@@ -6,42 +6,54 @@ import { userLogIn, userSignUp } from "../services/authService"
 const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-  const { setItem, removeItem } = useLocalStorage();
-  const [user, setUser] = useState(null)
+  const { getItem, setItem, removeItem } = useLocalStorage();
+  const [user, setUser] = useState(getItem("currentUser") ? getItem("currentUser") : null)
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    console.log("user", user)
+  }, [user])
 
-
-    useEffect(() => {
-      console.log("user", user)
-    }, [user])
-
-
-  async function signUp(name, email, password) {
-    const newUser = { name, email, password };
-    const user = await userSignUp(newUser)
-    console.log('user signed up', user)
-    setItem("newUser", user)
-    // setUser({ email });
-    
-    return { success: true };
+  async function signUp(name, username, email, password) {
+    try {
+      const newUser = { name, username, email, password };
+      const user = await userSignUp(newUser)
+      console.log('user signed up', user)  
+      return { success: true };
+    } catch (error) {
+      console.log({error, reason: "username already exists"})
+      return { success: false, error: "username already exists", errorMessage: error}
+    }
   }
   
-  async function login(email, password) {
-    const user = await userLogIn({ email, password })
-    console.log('user logged in', user)
-    if (!user) {
-      return { success: false }
-    } 
-    setUser(user)
-    return { success: true }
+  async function logIn(username, password) {
+    try {
+      const user = await userLogIn({ username, password })
+      console.log('user logged in', user)
+      if (!user) {
+        return { success: false, error: "User does not exist" }
+      } 
+      
+      setUser(user)
+      setItem("currentUser", user)
+      return { success: true }
+    } catch (error) {
+      console.log({error, reason: "invalid username or password"})
+      return { successs: false, error: "Invalid username or password"}
+    }
   }
 
-  function logout() {
-    removeItem("currentUserEmail");
-    setUser(null);
+  function logOut() {
+    removeItem("currentUser");
+    setUser(null)
+  }
+
+  function handleError(message) {
+    message !== null ? setError(message) : setError(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, signUp, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, signUp, logIn, logOut, error, handleError }}>{children}</AuthContext.Provider>
   );
 }
 
