@@ -360,6 +360,8 @@ body {
   background: #DC3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
+  padding: 0.1rem;
+  color: var(--primary-text-color)
 }
 
 .error-message {
@@ -383,6 +385,7 @@ body {
   font-weight: 500;
   cursor: pointer;
 }
+
 
 .auth-link:hover {
   text-decoration: underline;

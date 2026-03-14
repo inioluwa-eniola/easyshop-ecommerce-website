@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const [mode, setMode] = useState("signup");
   const [error, setError] = useState(null);
-  const { signUp, user, login } = useAuth();
+  const { signUp, login } = useAuth();
 
   const navigate = useNavigate();
 
@@ -20,11 +20,14 @@ const Auth = () => {
     setError(null);
     let result;
     if (mode === "signup") {
-      result = await signUp(data.name, data.email, data.password);
+      result = await signUp(data.name, data.username, data.email, data.password);
     } else {
-      result = await login(data.email, data.password);
+      result = await login(data.username, data.password);
     }
 
+    if (result.signUpSuccess) {
+      console.log("signup successful")
+    }
     if (result.success) {
       alert("successful");
       navigate("/");
@@ -37,7 +40,7 @@ const Auth = () => {
     <div className="page">
       <div className="container">
         <div className="auth-container">
-          {user && <p>User logged in: {user.email} </p>}
+          {/* {user && <p>User logged in: {user.email} </p>} */}
           <h1 className="page-title">
             {mode === "signup" ? "Sign Up" : "Login"}
           </h1>
@@ -66,7 +69,6 @@ const Auth = () => {
                     className="form-input"
                     type="text"
                     id="username"
-                    placeholder="John Doe"
                     {...register("username", {
                       required: "Username is required",
                     })}
@@ -131,23 +133,8 @@ const Auth = () => {
                       required: "Username is required",
                     })}
                   />
-                  {errors.email && (
-                    <span className="form-error">{errors.email.message}</span>
-                  )}
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="email">
-                    Email
-                  </label>
-                  <input
-                    className="form-input"
-                    type="email"
-                    id="email"
-                    placeholder="jdoe@gmail.com"
-                    {...register("email", { required: "Email is required" })}
-                  />
-                  {errors.email && (
-                    <span className="form-error">{errors.email.message}</span>
+                  {errors.username && (
+                    <span className="form-error">{errors.username.message}</span>
                   )}
                 </div>
                 <div className="form-group">
