@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createContext, useContext } from "react";
-import { getProductById } from "../data/fetchData";
+import { getProductById } from "../services/productService"
 
 const CartContext = createContext(null);
 
@@ -23,13 +23,16 @@ export default function CartProvider({ children }) {
     }
   }
 
-  function getCartItemsWithProducts() {
-    return cartItems
-      .map((item) => ({
-        ...item,
-        product: getProductById(item.id),
-      }))
-      .filter((item) => item.product);
+  async function getCartItemsWithProducts() {
+    const itemPromises = cartItems.map(async (item) => {
+      const product = await getProductById(item.id)
+      return product ? { ...item, product} : null
+    })
+
+    const results = await Promise.all(itemPromises)
+    console.log("resulting product", results)
+
+    return results.filter((item) => item&&item.product)
   }
 
   function removeFromCart(productId) {
@@ -49,12 +52,13 @@ export default function CartProvider({ children }) {
     }
   }
 
-  function getCartTotal() {
-    const total = cartItems.reduce((totalValue, item) => {
-      const product = getProductById(item.id);
-      return totalValue + (product ? product.price * item.quantity : 0);
-    }, 0);
-    return total;
+  async function getCartTotal() {
+    let total = 0
+    for (const item of cartItems) {
+      const product = await getProductById(item.id)
+      total = total + (product ? product.price * item.quantity : 0)
+    }
+    return total
   }
 
   function clearCart() {
