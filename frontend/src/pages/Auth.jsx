@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const [mode, setMode] = useState("signup");
   const [error, setError] = useState(null);
-  const { signUp, login } = useAuth();
+  const { signUp, logIn } = useAuth();
 
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const Auth = () => {
     if (mode === "signup") {
       result = await signUp(data.name, data.username, data.email, data.password);
     } else {
-      result = await login(data.username, data.password);
+      result = await logIn(data.username, data.password);
     }
 
     if (result.signUpSuccess) {
@@ -42,7 +42,7 @@ const Auth = () => {
         <div className="auth-container">
           {/* {user && <p>User logged in: {user.email} </p>} */}
           <h1 className="page-title">
-            {mode === "signup" ? "Sign Up" : "Login"}
+            {mode === "signup" ? "Sign Up" : "logIn"}
           </h1>
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
             {error && <div className="error-message">{error}</div>}
@@ -119,7 +119,7 @@ const Auth = () => {
               </>
             )}
 
-            {mode === "login" && (
+            {mode === "logIn" && (
               <>
                 <div className="form-group">
                   <label className="form-label" htmlFor="username">
@@ -167,15 +167,15 @@ const Auth = () => {
               </>
             )}
             <button type="submit" className="btn btn-cta btn-large">
-              {mode === "signup" ? "Sign Up" : "Login"}
+              {mode === "signup" ? "Sign Up" : "logIn"}
             </button>
           </form>
           <div className="auth-switch">
             {mode === "signup" ? (
               <p>
                 Already have an account?{" "}
-                <span className="auth-link" onClick={() => setMode("login")}>
-                  Login
+                <span className="auth-link" onClick={() => setMode("logIn")}>
+                  logIn
                 </span>
               </p>
             ) : (
