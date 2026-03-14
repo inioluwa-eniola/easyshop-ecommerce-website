@@ -84,7 +84,7 @@ export default function CartProvider({ children }) {
       alert("successful order");
       setCartItems([]);
     } else {
-      navigate("/signup")
+      navigate("/login")
     }
   }
 

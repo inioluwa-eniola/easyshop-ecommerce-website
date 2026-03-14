@@ -18,7 +18,7 @@ const getTokenFrom = (req, res) => {
 checkoutRouter.post("/", async (req, res, next) => {
   try {
     const token = getTokenFrom(req, res)
-    if (!token) return res.json({ success: false, error: "token missing" })
+    if (!token) return res.status(401).json({ success: false, error: "token missing" })
     
     const decodedToken = jwt.verify(token, process.env.SECRET) 
     if (!decodedToken.id) {

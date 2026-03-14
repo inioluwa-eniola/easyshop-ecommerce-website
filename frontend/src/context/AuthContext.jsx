@@ -39,7 +39,7 @@ export default function AuthProvider({ children }) {
       return { success: true }
     } catch (error) {
       console.log({error, reason: "invalid username or password"})
-      return { successs: false, error: "Invalid username or password"}
+      return { success: false, error: "Invalid username or password"}
     }
   }
 
