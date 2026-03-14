@@ -1,41 +1,37 @@
-import { useState, createContext, useContext } from "react";
+import { useState, createContext, useContext, useEffect } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { userLogIn, userSignUp } from "../services/authService"
+
 
 const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
-  const { getItem, setItem, removeItem } = useLocalStorage();
-  const [user, setUser] = useState(
-    getItem("currentUserEmail") ? { email: getItem("currentUserEmail") } : null,
-  );
+  const { setItem, removeItem } = useLocalStorage();
+  const [user, setUser] = useState(null)
 
-  function signUp(email, password) {
-    const users = getItem("users") ?? [];
 
-    if (users.find((user) => user.email === email)) {
-      return { success: false, error: "Email already exists" };
-    }
-    const newUser = { email, password };
-    users.push(newUser);
-    setItem("users", users);
-    setItem("currentUserEmail", email);
+    useEffect(() => {
+      console.log("user", user)
+    }, [user])
 
-    setUser({ email });
 
+  async function signUp(name, email, password) {
+    const newUser = { name, email, password };
+    const user = await userSignUp(newUser)
+    console.log('user signed up', user)
+    setItem("newUser", user)
+    // setUser({ email });
+    
     return { success: true };
   }
-
-  function login(email, password) {
-    const users = getItem("users") ?? [];
-    const user = users.find(
-      (u) => u.email === email && u.password === password,
-    );
+  
+  async function login(email, password) {
+    const user = await userLogIn({ email, password })
+    console.log('user logged in', user)
     if (!user) {
-      return { success: false, error: "Invalid email or password" };
-    } else {
-      setItem("currentUserEmail", email);
-      setUser(user);
-    }
+      return { success: false }
+    } 
+    setUser(user)
     return { success: true }
   }
 

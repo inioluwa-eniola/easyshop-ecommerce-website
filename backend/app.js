@@ -1,5 +1,8 @@
 const express = require("express");
-const productsRoute = require("./controllers/products");
+const productsRouter = require("./controllers/products");
+const usersRouter = require("./controllers/users")
+const loginRouter = require("./controllers/login")
+const checkoutRouter = require("./controllers/checkout")
 const { MONGODB_URI } = require("./utils/config");
 const logger = require("./utils/logger");
 const middleware = require("./utils/middleware");
@@ -24,6 +27,9 @@ app.use(express.static("dist"));
 app.use(express.json());
 app.use(middleware.requestLogger)
 
-app.use("/api/products", productsRoute);
+app.use("/api/products", productsRouter);
+app.use("/api/users", usersRouter)
+app.use("/api/login", loginRouter)
+app.use("/auth/checkout", checkoutRouter)
 
 module.exports = app;

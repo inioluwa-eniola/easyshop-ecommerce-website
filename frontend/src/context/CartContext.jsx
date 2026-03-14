@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { createContext, useContext } from "react";
-// import { getProductById } from "../data/fetchData";
 import { getProductById } from "../services/productService"
 
 const CartContext = createContext(null);
 
 export default function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
-  console.log("cartItems", cartItems)
   function addToCart(productId) {
     const existing =
       cartItems.find((item) => item.id === productId);
@@ -35,12 +33,6 @@ export default function CartProvider({ children }) {
     console.log("resulting product", results)
 
     return results.filter((item) => item&&item.product)
-    // return cartItems
-    //   .map((item) => ({
-    //     ...item,
-    //     product: getProductById(item.id),
-    //   }))
-    //   .filter((item) => item.product);
   }
 
   function removeFromCart(productId) {
@@ -52,7 +44,6 @@ export default function CartProvider({ children }) {
       removeFromCart(productId);
       return;
     } else {
-      // console.log(cartItems.find(item => item.id === productId).quantity)
       setCartItems(
         cartItems.map((item) =>
           item.id === productId ? { ...item, quantity } : item,
@@ -60,14 +51,6 @@ export default function CartProvider({ children }) {
       );
     }
   }
-
-  // async function getCartTotal() {
-  //   const total = await cartItems.reduce(async (totalValue, item) => {
-  //     const product = await getProductById(item.id);
-  //     return totalValue + (product ? product.price * item.quantity : 0);
-  //   }, 0);
-  //   return total;
-  // }
 
   async function getCartTotal() {
     let total = 0

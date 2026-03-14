@@ -16,18 +16,18 @@ const Auth = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setError(null);
     let result;
     if (mode === "signup") {
-      result = signUp(data.email, data.password);
+      result = await signUp(data.name, data.email, data.password);
     } else {
-      result = login(data.email, data.password);
+      result = await login(data.email, data.password);
     }
 
     if (result.success) {
       alert("successful");
-      navigate("/")
+      navigate("/");
     } else {
       setError(result.error);
     }
@@ -43,44 +43,142 @@ const Auth = () => {
           </h1>
           <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
             {error && <div className="error-message">{error}</div>}
-            <div className="form-group">
-              <label className="form-label" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="form-input"
-                type="email"
-                id="email"
-                {...register("email", { required: "Email is required" })}
-              />
-              {errors.email && (
-                <span className="form-error">{errors.email.message}</span>
-              )}
-            </div>
-            <div className="form-group">
-              <label className="form-label" htmlFor="password">
-                Password
-              </label>
-              <input
-                className="form-input"
-                type="password"
-                id="password"
-                {...register("password", {
-                  required: "Password is required",
-                  minLength: {
-                    value: 6,
-                    message: "Password must be at least 6 characters",
-                  },
-                  maxLength: {
-                    value: 12, // remove entirely later
-                    message: "Password must be less than 12 characters",
-                  },
-                })}
-              />
-              {errors.password && (
-                <span className="form-error">{errors.password.message}</span>
-              )}
-            </div>
+
+            {mode === "signup" && (
+              <>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="full-name">
+                    Full Name
+                  </label>
+                  <input
+                    className="form-input"
+                    type="text"
+                    id="full-name"
+                    placeholder="John Doe"
+                    {...register("name", { required: "Full name is required" })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="username">
+                    Username
+                  </label>
+                  <input
+                    className="form-input"
+                    type="text"
+                    id="username"
+                    placeholder="John Doe"
+                    {...register("username", {
+                      required: "Username is required",
+                    })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="form-input"
+                    type="email"
+                    id="email"
+                    placeholder="jdoe@gmail.com"
+                    {...register("email", { required: "Email is required" })}
+                  />
+                  {errors.email && (
+                    <span className="form-error">{errors.email.message}</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    className="form-input"
+                    type="password"
+                    id="password"
+                    placeholder=""
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                      maxLength: {
+                        value: 12, // remove entirely later
+                        message: "Password must be less than 12 characters",
+                      },
+                    })}
+                  />
+                  {errors.password && (
+                    <span className="form-error">
+                      {errors.password.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
+
+            {mode === "login" && (
+              <>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="username">
+                    Username
+                  </label>
+                  <input
+                    className="form-input"
+                    type="text"
+                    id="username"
+                    {...register("username", {
+                      required: "Username is required",
+                    })}
+                  />
+                  {errors.email && (
+                    <span className="form-error">{errors.email.message}</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="form-input"
+                    type="email"
+                    id="email"
+                    placeholder="jdoe@gmail.com"
+                    {...register("email", { required: "Email is required" })}
+                  />
+                  {errors.email && (
+                    <span className="form-error">{errors.email.message}</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="password">
+                    Password
+                  </label>
+                  <input
+                    className="form-input"
+                    type="password"
+                    id="password"
+                    placeholder=""
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters",
+                      },
+                      maxLength: {
+                        value: 12, // remove entirely later
+                        message: "Password must be less than 12 characters",
+                      },
+                    })}
+                  />
+                  {errors.password && (
+                    <span className="form-error">
+                      {errors.password.message}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
             <button type="submit" className="btn btn-cta btn-large">
               {mode === "signup" ? "Sign Up" : "Login"}
             </button>
